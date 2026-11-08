@@ -197,7 +197,20 @@ a:hover { color: var(--seal-dark); text-decoration-color: currentColor; }
 }
 
 /* Logo sits under the Research heading; the lede wraps around it */
-.logo-draw { float: left; margin: 4px clamp(18px, 3vw, 32px) 8px -8px; }
+/* display: table keeps the caption no wider than the logo */
+.logo-draw { float: left; display: table; margin: 4px clamp(18px, 3vw, 32px) 8px -8px; }
+.logo-link { display: block; border-radius: var(--radius); }
+.logo-link:focus-visible { outline: 2px solid var(--seal); outline-offset: 4px; }
+.logo-quote {
+  display: table-caption;
+  caption-side: bottom;
+  padding: 2px 0 0 8px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.3;
+  color: var(--muted);
+}
 .logo-video {
   height: clamp(72px, 10vw, 112px);
   width: auto;
@@ -480,7 +493,21 @@ h4 {
   margin-bottom: clamp(48px, 7vw, 80px);
 }
 
-.pull { margin: 0; padding-left: 22px; border-left: 3px solid var(--seal); }
+/* A large, faint quotation mark sits behind the upper left of the quote */
+.pull { position: relative; isolation: isolate; margin: 0; padding: 28px 0 0 18px; }
+.pull::before {
+  content: "“";
+  position: absolute;
+  z-index: -1;
+  top: -.22em;
+  left: -.12em;
+  font-family: var(--font-display);
+  font-size: clamp(9rem, 16vw, 13rem);
+  line-height: 1;
+  color: var(--seal);
+  opacity: .13;
+  pointer-events: none;
+}
 .pull p {
   font-family: var(--font-display);
   font-style: italic;

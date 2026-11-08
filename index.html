@@ -18,6 +18,8 @@
 
   <link rel="icon" href="media/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="media/favicon-64.png" sizes="64x64" type="image/png">
+  <!-- Switches to a light mark in dark browser themes (Chrome, Edge, Firefox); the PNGs above have a glow for the rest -->
+  <link rel="icon" href="media/favicon.svg" type="image/svg+xml" sizes="any">
   <link rel="apple-touch-icon" href="media/apple-touch-icon.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -123,13 +125,16 @@
       <div class="wrap">
         <header class="section-head">
           <h2 id="research-title">Research</h2>
-          <div class="logo-draw">
-            <video class="logo-video" muted playsinline preload="auto" width="538" height="240"
-                   aria-label="Fung Lab logo" role="img" tabindex="-1">
-              <source src="media/logo-draw.webm" type="video/webm">
-              <source src="media/logo-draw.mp4" type="video/mp4">
-            </video>
-          </div>
+          <figure class="logo-draw">
+            <a class="logo-link" href="https://funglab.ai/" target="_blank" rel="noopener" aria-label="Fung Lab website (funglab.ai)">
+              <video class="logo-video" muted playsinline preload="auto" width="538" height="240"
+                     aria-hidden="true" tabindex="-1">
+                <source src="media/logo-draw.webm" type="video/webm">
+                <source src="media/logo-draw.mp4" type="video/mp4">
+              </video>
+            </a>
+            <figcaption class="logo-quote">Have an idea? If it has legs, run with it!</figcaption>
+          </figure>
           <p class="lede">Spatial context tells us why disease happened, what it touches and where it may
             return. But precious tissue can run out before the questions do. My work recovers more
             information from the same piece of anatomy.</p>
@@ -449,8 +454,9 @@
 
         <div class="teaching-grid">
           <blockquote class="pull">
-            <p>Bioengineering has always felt like a passport to me: allowing travel among mechanics,
-              biology, chemistry, imaging and computation. I want students to experience that same freedom.</p>
+            <p>Bioengineering has always felt like a passport to me: allowing travel across fields of
+              mechanics, biology, chemistry, medicine, and computation. I want students to experience
+              that same freedom.</p>
           </blockquote>
 
           <div class="teaching-body">
