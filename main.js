@@ -173,15 +173,118 @@
     }
   }
 
-  // Projects conveyor: pause button (hover and keyboard focus also pause it)
+  // Projects conveyor: drifts on its own, and can be swiped, dragged,
+  // scrolled with a trackpad or stepped with the arrow buttons.
+  // Hovering, focusing or touching it pauses the drift; it resumes shortly after.
   var conveyor = document.querySelector('.conveyor');
   var cToggle = document.querySelector('.conveyor-toggle');
-  if (conveyor && cToggle) {
-    cToggle.addEventListener('click', function () {
-      var paused = !conveyor.classList.contains('is-paused');
-      conveyor.classList.toggle('is-paused', paused);
-      cToggle.setAttribute('aria-pressed', String(paused));
-      cToggle.textContent = paused ? 'Play' : 'Pause';
+  if (conveyor && cToggle && !reduceMotion.matches) {
+    var SPEED = 46;                       // px per second
+    var firstTrack = conveyor.querySelector('.conveyor-track');
+    var copy = conveyor.querySelectorAll('.conveyor-track')[1].cloneNode(true);
+    conveyor.appendChild(copy);           // three copies, so there is always room both ways
+    conveyor.classList.add('is-scroller');
+
+    var period = 0;                       // width of one copy
+    var pos = 0;                          // float scroll position
+    var userPaused = false, hovering = false, focused = false;
+    var holdUntil = 0;                    // drift waits until this time after manual input
+    var tween = null;
+    var lastT = 0;
+
+    function measure() {
+      period = firstTrack.getBoundingClientRect().width;
+      if (!pos) pos = period;
+      wrap();
+    }
+    function wrap() {
+      if (!period) return;
+      if (pos < period * 0.5) { pos += period; if (tween) { tween.from += period; tween.to += period; } }
+      else if (pos >= period * 1.5) { pos -= period; if (tween) { tween.from -= period; tween.to -= period; } }
+    }
+    function apply() { conveyor.scrollLeft = pos; }
+    function hold(ms) { holdUntil = performance.now() + ms; }
+
+    function frame(t) {
+      var dt = lastT ? Math.min(0.05, (t - lastT) / 1000) : 0;
+      lastT = t;
+      if (tween) {
+        var k = Math.min(1, (t - tween.t0) / 450);
+        var e = 1 - Math.pow(1 - k, 3);
+        pos = tween.from + (tween.to - tween.from) * e;
+        if (k === 1) { tween = null; hold(2500); }
+        wrap(); apply();
+      } else if (!dragging && !userPaused && !hovering && !focused && t > holdUntil) {
+        pos += SPEED * dt;
+        wrap(); apply();
+      }
+      requestAnimationFrame(frame);
+    }
+
+    // Native scrolling (touch swipe, trackpad): follow it and keep it looping
+    conveyor.addEventListener('scroll', function () {
+      if (Math.abs(conveyor.scrollLeft - pos) > 2) {
+        pos = conveyor.scrollLeft;
+        hold(2500);
+        var before = pos;
+        wrap();
+        if (pos !== before) apply();
+      }
+    }, { passive: true });
+    conveyor.addEventListener('touchstart', function () { hold(4000); }, { passive: true });
+
+    // Mouse drag
+    var dragging = false, dragX = 0, dragPos = 0, moved = false;
+    conveyor.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      dragging = true; moved = false; tween = null;
+      dragX = e.clientX; dragPos = pos;
     });
+    window.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - dragX;
+      if (!moved && Math.abs(dx) > 5) { moved = true; conveyor.classList.add('is-dragging'); }
+      if (moved) {
+        pos = dragPos - dx;
+        var before = pos; wrap(); dragPos += pos - before;
+        apply();
+      }
+    });
+    window.addEventListener('pointerup', function () {
+      if (!dragging) return;
+      dragging = false;
+      hold(2500);
+      // Let the click that ends a drag fall through without opening a link
+      setTimeout(function () { conveyor.classList.remove('is-dragging'); }, 0);
+    });
+    conveyor.addEventListener('click', function (e) {
+      if (moved) { e.preventDefault(); moved = false; }
+    }, true);
+    conveyor.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
+    conveyor.addEventListener('mouseenter', function () { hovering = true; });
+    conveyor.addEventListener('mouseleave', function () { hovering = false; hold(600); });
+    conveyor.addEventListener('focusin', function () { focused = true; });
+    conveyor.addEventListener('focusout', function () { focused = false; });
+
+    // Arrow buttons step about two-thirds of the visible width
+    document.querySelectorAll('.conveyor-step').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var dir = Number(b.getAttribute('data-dir'));
+        var from = tween ? tween.to : pos;
+        tween = { from: pos, to: from + dir * conveyor.clientWidth * 0.66, t0: performance.now() };
+      });
+    });
+
+    cToggle.addEventListener('click', function () {
+      userPaused = !userPaused;
+      cToggle.setAttribute('aria-pressed', String(userPaused));
+      cToggle.textContent = userPaused ? 'Play' : 'Pause';
+    });
+
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    measure(); apply();
+    requestAnimationFrame(frame);
   }
 })();

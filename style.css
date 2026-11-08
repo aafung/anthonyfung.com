@@ -205,7 +205,8 @@ a:hover { color: var(--seal-dark); text-decoration-color: currentColor; }
 .logo-quote {
   display: table-caption;
   caption-side: bottom;
-  padding: 2px 0 0 8px;
+  padding: 2px 0 0;
+  text-align: center;
   font-family: var(--font-display);
   font-style: italic;
   font-size: 1.02rem;
@@ -375,11 +376,23 @@ h4 {
   flex-shrink: 0;
   gap: var(--gap);
   padding-right: var(--gap);
-  animation: conveyor 48s linear infinite;
+  animation: conveyor 36s linear infinite;
 }
 .conveyor:hover .conveyor-track,
 .conveyor:focus-within .conveyor-track,
 .conveyor.is-paused .conveyor-track { animation-play-state: paused; }
+/* With JS the belt is a real scroller: swipe, drag, trackpad or arrow buttons */
+.conveyor.is-scroller {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  cursor: grab;
+}
+.conveyor.is-scroller::-webkit-scrollbar { display: none; }
+.conveyor.is-scroller .conveyor-track { animation: none; }
+.conveyor.is-dragging { cursor: grabbing; }
+.conveyor.is-dragging .project { pointer-events: none; }
+.conveyor img { -webkit-user-drag: none; user-select: none; }
 @keyframes conveyor { to { transform: translateX(-100%); } }
 
 .project {
@@ -407,9 +420,29 @@ h4 {
   color: #2a2824;
 }
 
+.conveyor-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+}
+.conveyor-step {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+  background: none;
+  color: var(--ink-2);
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.js .conveyor-step { display: inline-grid; place-items: center; }
+.conveyor-step:hover { color: var(--ink); border-color: var(--ink-2); }
 .conveyor-toggle {
-  display: block;
-  margin: 10px 0 0 auto;
+  margin-left: 8px;
   min-height: 44px;
   padding: 0 4px;
   border: 0;
@@ -620,7 +653,12 @@ h4 {
 
   .hero { min-height: 0; padding-block: 32px 64px; }
   .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-  .portrait { max-width: 320px; width: 78%; }
+  /* Phone: headshot right under the name and role */
+  .hero-grid { gap: 0; }
+  .hero-text { display: contents; }
+  .hero-text > * { order: 2; }
+  .hero h1, .hero-role { order: 0; }
+  .portrait { order: 1; max-width: 320px; width: 78%; margin: 32px 0 8px; }
 
   .research-grid { grid-template-columns: 1fr; }
   /* Phone: the Raman frame sits between current work and future directions */
@@ -659,11 +697,11 @@ h4 {
   .profile:hover, .contact-link:hover, .project:hover { transform: none; }
   .conveyor { -webkit-mask-image: none; mask-image: none; }
   .conveyor-track { flex-wrap: wrap; justify-content: center; flex-shrink: 1; padding-right: 0; row-gap: 24px; animation: none; }
-  .conveyor-track[aria-hidden="true"], .conveyor-toggle { display: none; }
+  .conveyor-track[aria-hidden="true"], .conveyor-controls { display: none; }
 }
 
 @media print {
-  .site-header, .profiles, .video-frame, .logo-draw, .conveyor-track[aria-hidden="true"], .conveyor-toggle { display: none; }
+  .site-header, .profiles, .video-frame, .logo-draw, .conveyor-track[aria-hidden="true"], .conveyor-controls { display: none; }
   .conveyor-track { animation: none; flex-wrap: wrap; }
   .conveyor { -webkit-mask-image: none; mask-image: none; }
   body { background: #fff; }
