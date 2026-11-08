@@ -14,6 +14,7 @@
   --orcid: #7FA22B;      /* ORCID green, darkened for contrast on paper */
   --linkedin: #0A66C2;
   --scholar: #3B78E7;
+  --instagram: #E1306C;
 
   --font-display: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --font-body: "Source Serif 4", "Iowan Old Style", Georgia, "Times New Roman", serif;
@@ -288,6 +289,7 @@ a:hover { color: var(--seal-dark); text-decoration-color: currentColor; }
 .profile.linkedin svg { color: var(--linkedin); }
 .profile.scholar svg { color: var(--scholar); }
 .profile.x svg { color: var(--ink); }
+.profile.instagram svg { color: var(--instagram); }
 
 /* Sections */
 
