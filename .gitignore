@@ -1,0 +1,19 @@
+# Private source documents (CV with phone numbers and references). Never upload.
+source-docs/
+
+# Raw, uncompressed originals. The site uses the web copies in media/.
+Assets/
+assets-raw/
+
+# OS and editor clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+.dropbox
+.dropbox.attr
+*.tmp
+.vscode/
+.idea/
+
+# Local tooling
+.claude/
