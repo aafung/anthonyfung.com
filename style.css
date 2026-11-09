@@ -227,6 +227,7 @@ a:hover { color: var(--seal-dark); text-decoration-color: currentColor; }
   line-height: 1.02;
 }
 .hero h1 em { font-weight: 500; color: var(--ink-2); }
+.hero h1 .nick { font-weight: 500; color: var(--ink-2); }
 
 .hero-role {
   margin: 16px 0 0;
@@ -550,6 +551,13 @@ h4 {
   line-height: 1.25;
   margin: 0;
 }
+.pull footer {
+  margin-top: 14px;
+  font-size: .9rem;
+  letter-spacing: .04em;
+  color: var(--muted);
+}
+.pull footer::before { content: "— "; }
 
 .teaching-body > p { color: var(--ink-2); margin-bottom: 32px; }
 .plain-list { list-style: none; }
