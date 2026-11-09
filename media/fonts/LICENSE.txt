@@ -1,0 +1,8 @@
+These web fonts are redistributed under the SIL Open Font License, Version 1.1
+(https://openfontlicense.org), as published on Google Fonts:
+
+- Cormorant Garamond, Copyright 2015 The Cormorant Project Authors
+- Source Serif 4, Copyright 2014-2021 Adobe (http://www.adobe.com/)
+- Orbitron, Copyright 2018 The Orbitron Project Authors
+
+The fonts are subset to Latin and Latin Extended characters.
